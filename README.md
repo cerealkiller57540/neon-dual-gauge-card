@@ -144,7 +144,7 @@ About thirty more `plasma_*` and `halo_*` settings (roughness, frequency, reach,
 
 **The editor labels are in French.** Translation is on the way. Every option can also be set in YAML.
 
-**Which theme is in the screenshots?** Neo Tokyo, from [Home-Assistant-Neon-Cards](https://github.com/cerealkiller57540/Home-Assistant-Neon-Cards). The card works with any theme.
+**Which theme is in the screenshots?** Neo Tokyo, the author's own dark theme (not published). The card works with any theme.
 
 ## 🙏 Credits
 
