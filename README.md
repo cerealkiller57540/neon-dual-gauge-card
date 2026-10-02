@@ -146,6 +146,10 @@ About thirty more `plasma_*` and `halo_*` settings (roughness, frequency, reach,
 
 **Which theme is in the screenshots?** Neo Tokyo, from [Home-Assistant-Neon-Cards](https://github.com/cerealkiller57540/Home-Assistant-Neon-Cards). The card works with any theme.
 
+## 🙏 Credits
+
+This card is a fork of [**dual_gauge**](https://github.com/guiohm79/dual_gauge) by [Guiohm79](https://github.com/guiohm79) (MIT). The two LED rings, the bidirectional mode, severity colours and markers come from there; the WebGL plasma, the halos and the neon styling were added on top. Go give the original a ⭐.
+
 ## 🌃 More neon cards
 
 This card is part of a family. See the full collection at [**Home-Assistant-Neon-Cards**](https://github.com/cerealkiller57540/Home-Assistant-Neon-Cards).
