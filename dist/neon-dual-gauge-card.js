@@ -1825,7 +1825,7 @@ function updateDualGauge(context) {
   const config2 = context.config.gauges[1];
 
   // Validation: vérifier que les entités existent
-  const isFr = (navigator.language || '').startsWith('fr');
+  const isFr = _lang === 'fr';   // langue de HA (hass.locale.language), plus celle du navigateur
 
   if (!config1.entity || !config2.entity) {
     // Afficher un message d'aide si les entités ne sont pas configurées
@@ -1959,7 +1959,7 @@ function updateDualGauge(context) {
 
 function parseDualConfig(config) {
   if (!config.gauges || !Array.isArray(config.gauges) || config.gauges.length !== 2) {
-    throw new Error("La configuration 'gauges' doit contenir exactement 2 configurations de gauge.");
+    throw new Error(_t("La configuration 'gauges' doit contenir exactement 2 configurations de gauge."));
   }
 
   // Validation lenient: permet les entités vides pendant la configuration
@@ -2008,6 +2008,153 @@ function parseDualConfig(config) {
 // ============================================================================
 // NEON DUAL GAUGE CARD CLASS
 // ============================================================================
+
+/* ── i18n FR/EN : la clé est la chaîne française (le français s'affiche tel quel) ── */
+let _lang = /^fr/i.test(document.documentElement.lang || '') ? 'fr' : 'en';   // HA pose <html lang> ; hass.language fait foi ensuite
+const _EN = {
+ "Animation pulse": "Pulse animation",
+ "Anneau de verre central": "Central glass ring",
+ "Attraction comète": "Comet attraction",
+ "Auto": "Auto",
+ "Auto (65%)": "Auto (65%)",
+ "Avancé": "Advanced",
+ "Bidirectionnel": "Bidirectional",
+ "Brume de fond": "Background haze",
+ "Carte": "Card",
+ "Clair": "Light",
+ "Couleur texte": "Text colour",
+ "Couleur texte secondaire": "Secondary text colour",
+ "Couleur unité": "Unit colour",
+ "Couleur valeur": "Value colour",
+ "Debounce MàJ": "Debounce updates",
+ "Durée animation (ms)": "Animation duration (ms)",
+ "Décimales": "Decimals",
+ "Défaut": "Default",
+ "Effet glitch survol": "Hover glitch effect",
+ "Effets WebGL": "WebGL effects",
+ "Effets visuels": "Visual effects",
+ "Entité": "Entity",
+ "Externe": "Outer",
+ "Filaments max": "Max filaments",
+ "Flou ombre centre": "Centre shadow blur",
+ "Flou ombre externe": "Outer shadow blur",
+ "Fond centre": "Centre background",
+ "Fond jauge": "Gauge background",
+ "Fond personnalisé": "Custom background",
+ "Format YAML — liste de marqueurs": "YAML format — list of markers",
+ "Format YAML — liste de seuils color/value": "YAML format — list of colour/value thresholds",
+ "Format YAML — zones colorées": "YAML format — coloured zones",
+ "Fréquence des zigzags": "Zigzag frequency",
+ "Glow de valeur dynamique (suit la sévérité)": "Dynamic value glow (follows severity)",
+ "Graduations gravées": "Engraved ticks",
+ "Halo SoC v2 dessous": "v2 SoC halo underneath",
+ "Halo charge": "Charge halo",
+ "Halo coloré": "Coloured halo",
+ "Halo du noyau (v2 = 1)": "Core halo (v2 = 1)",
+ "Halo puissance": "Power halo",
+ "Halos · commun": "Halos · common",
+ "Impulsions": "Pulses",
+ "Intensité pulse (px)": "Pulse intensity (px)",
+ "Interne": "Inner",
+ "Intervalle MàJ (ms)": "Update interval (ms)",
+ "Jauge Externe (1)": "Outer gauge (1)",
+ "Jauge Interne (0)": "Inner gauge (0)",
+ "Jauge principale": "Main gauge",
+ "La configuration 'gauges' doit contenir exactement 2 configurations de gauge.": "The 'gauges' config must contain exactly 2 gauge configurations.",
+ "Lueur supérieure": "Top glow",
+ "Marqueurs (YAML)": "Markers (YAML)",
+ "Masquer LEDs inactives": "Hide inactive LEDs",
+ "Masquer cadre": "Hide frame",
+ "Masquer ombres": "Hide shadows",
+ "Mode kiosque (économie thermique)": "Kiosk mode (thermal saving)",
+ "Nom de la carte": "Card name",
+ "Nombre LEDs": "LED count",
+ "Nébuleuse · densité": "Nebula · density",
+ "Nébuleuse · ondes de choc": "Nebula · shock waves",
+ "Nébuleuse · portée à 100 % (px)": "Nebula · reach at 100 % (px)",
+ "Nébuleuse · turbulence": "Nebula · turbulence",
+ "Ombre centre": "Centre shadow",
+ "Ombre conteneur": "Container shadow",
+ "Ombre externe": "Outer shadow",
+ "Ondes · focalisation": "Waves · focus",
+ "Ondes · halo v2 dessous": "Waves · v2 halo underneath",
+ "Ondes · intensité": "Waves · intensity",
+ "Ondes · ouverture": "Waves · spread",
+ "Ondes · portée (px)": "Waves · reach (px)",
+ "Ondes · épaisseur (px)": "Waves · thickness (px)",
+ "Opacité min pulse": "Pulse min opacity",
+ "Performance": "Performance",
+ "Personnalisé": "Custom",
+ "Plasma": "Plasma",
+ "Poids unité": "Unit weight",
+ "Poids valeur": "Value weight",
+ "Police du titre": "Title font",
+ "Police unité": "Unit font",
+ "Police valeur": "Value font",
+ "Position du titre": "Title position",
+ "Puissance indisponible": "Power unavailable",
+ "Rayon d'extinction (175 = aucune)": "Fade radius (175 = none)",
+ "Rayon jauge interne (px)": "Inner gauge radius (px)",
+ "Rayon markers": "Marker radius",
+ "Rugosité des zigzags": "Zigzag roughness",
+ "Réservoir · intensité": "Reservoir · intensity",
+ "Réservoir · ménisque": "Reservoir · meniscus",
+ "Réservoir · portée (px)": "Reservoir · reach (px)",
+ "Réservoir · respiration": "Reservoir · breathing",
+ "Résonance · amplitude (px)": "Resonance · amplitude (px)",
+ "Résonance · intensité": "Resonance · intensity",
+ "Résonance · ondes sur le tour": "Resonance · waves per turn",
+ "Résonance · rayon (px)": "Resonance · radius (px)",
+ "Résonance · vitesse (tr/s)": "Resonance · speed (rev/s)",
+ "Sans WebGL, la card garde le rendu LED de la v2.": "Without WebGL, the card keeps the v2 LED rendering.",
+ "Sens en charge": "Charging direction",
+ "Sombre": "Dark",
+ "Style": "Style",
+ "Sweep d'allumage (ignition)": "Ignition sweep",
+ "Taille LED (px)": "LED size (px)",
+ "Taille jauge externe (px)": "Outer gauge size (px)",
+ "Taille jauge interne (px)": "Inner gauge size (px)",
+ "Taille unité": "Unit size",
+ "Taille valeur": "Value size",
+ "Thème": "Theme",
+ "Thème carte": "Card theme",
+ "Titre de la carte": "Card title",
+ "Transitions douces": "Smooth transitions",
+ "Tremblement sous 20 %": "Tremor below 20 %",
+ "Triple neon glow (valeurs)": "Triple neon glow (values)",
+ "Tête de comète + traînée": "Comet head + trail",
+ "Unité": "Unit",
+ "Vitesse": "Speed",
+ "Vitesse pulse (s)": "Pulse speed (s)",
+ "Zones colorées (YAML)": "Coloured zones (YAML)",
+ "Zones de sévérité (YAML)": "Severity zones (YAML)",
+ "ex: #FF3366 / rgb(var(--rgb-lavande)) / var(--primary-color)": "e.g. #FF3366 / rgb(var(--rgb-lavande)) / var(--primary-color)",
+ "halo figé": "frozen halo",
+ "nébuleuse": "nebula",
+ "ondes de flux": "flow waves",
+ "réservoir": "reservoir",
+ "résonance": "resonance",
+ "v2 statique": "v2 static",
+ "vers l'anneau": "towards the ring",
+ "vers le noyau": "towards the core",
+ "Éclat au repos": "Idle glow",
+ "Économie énergie": "Power saving",
+ "Épaisseur du cœur (px)": "Core thickness (px)",
+ "Étalement ombre centre": "Centre shadow spread",
+ "Étalement ombre externe": "Outer shadow spread",
+ "éteint avec le plasma": "off with the plasma"
+};
+const _t = (fr) => {
+  if (_lang === 'fr' || fr == null || fr === '') return fr;
+  const k = String(fr).replace(/\s+/g, ' ').trim();
+  return _EN[k] ?? fr;
+};
+const _setLang = (h, o) => {   // o = instance (card/éditeur) : true tant que LA LANGUE APPLIQUÉE À CETTE INSTANCE n'est pas la bonne
+  const l = /^fr/i.test(String(h?.locale?.language || h?.language || '')) ? 'fr' : 'en';
+  _lang = l;
+  if (o) { if (o._li === l) return false; o._li = l; return true; }
+  return false;
+};
 
 class NeonDualGaugeCard extends HTMLElement {
   static getStubConfig() {
@@ -2098,6 +2245,7 @@ class NeonDualGaugeCard extends HTMLElement {
 
   set hass(hass) {
     this._hass = hass;
+    _setLang(hass, this);
 
     if (!this.config) return;
     if (this.config.power_save_mode && !this.isVisible) return;
@@ -2237,7 +2385,7 @@ class NeonDualGaugeCardEditor extends HTMLElement {
     if (!this._rendered) { this._rendered = true; this._render(); }
     else this._syncValues();
   }
-  set hass(h) { this._hass = h; this._fillDatalists(); }   // JAMAIS de render ici
+  set hass(h) { this._hass = h; if (_setLang(h, this) && this._rendered) this._render(); this._fillDatalists(); }   // JAMAIS de render ici
   disconnectedCallback() { this._rendered = false; }
 
   // ── Lecture / écriture config (clés imbriquées via ".") ────────────
@@ -2285,30 +2433,30 @@ class NeonDualGaugeCardEditor extends HTMLElement {
   }
 
   // ── Helpers de champ (signatures FIXES — ne pas réinventer) ────────
-  _section(t) { const d = document.createElement('div'); d.className = 'sec'; d.textContent = t; (this._appendTo || this).appendChild(d); return d; }
-  _hint(t)    { const d = document.createElement('div'); d.className = 'hint'; d.textContent = t; (this._appendTo || this).appendChild(d); return d; }
+  _section(t) { const d = document.createElement('div'); d.className = 'sec'; d.textContent = _t(t); (this._appendTo || this).appendChild(d); return d; }
+  _hint(t)    { const d = document.createElement('div'); d.className = 'hint'; d.textContent = _t(t); (this._appendTo || this).appendChild(d); return d; }
 
   _text(key, label, ph = '') {
-    const row = this._row(label);
+    const row = this._row(_t(label));
     const inp = document.createElement('input');
-    inp.type = 'text'; inp.placeholder = ph; inp.dataset.key = key;
+    inp.type = 'text'; inp.placeholder = _t(ph); inp.dataset.key = key;
     inp.value = this._read(key) ?? '';
     inp.addEventListener('input', () => this._set(key, inp.value));
     row.wrap.appendChild(inp); return inp;
   }
 
   _number(key, label, { min, max, step = 1, ph = '' } = {}) {
-    const row = this._row(label);
+    const row = this._row(_t(label));
     const inp = document.createElement('input');
     inp.type = 'number'; if (min != null) inp.min = min; if (max != null) inp.max = max;
-    inp.step = step; inp.placeholder = ph; inp.dataset.key = key;
+    inp.step = step; inp.placeholder = _t(ph); inp.dataset.key = key;
     inp.value = this._read(key) ?? '';
     inp.addEventListener('input', () => { const n = parseFloat(inp.value); this._set(key, isNaN(n) ? undefined : n); });
     row.wrap.appendChild(inp); return inp;
   }
 
   _toggle(key, label, defaultOn = false) {
-    const row = this._row(label);
+    const row = this._row(_t(label));
     const cb = document.createElement('input'); cb.type = 'checkbox'; cb.dataset.key = key;
     if (defaultOn) cb.dataset.defaultOn = '1';
     const v = this._read(key);
@@ -2319,9 +2467,9 @@ class NeonDualGaugeCardEditor extends HTMLElement {
   }
 
   _color(key, label, cssDefault = null, ph = 'ex: #FF3366 / rgb(var(--rgb-lavande)) / var(--primary-color)') {
-    const row = this._row(label);
+    const row = this._row(_t(label));
     const box = document.createElement('div'); box.className = 'color-row';
-    const txt = document.createElement('input'); txt.type = 'text'; txt.placeholder = ph; txt.dataset.key = key;
+    const txt = document.createElement('input'); txt.type = 'text'; txt.placeholder = _t(ph); txt.dataset.key = key;
     txt.value = this._read(key) ?? '';
     const pick = document.createElement('input'); pick.type = 'color';
     txt._pick = pick; txt._cssDefault = cssDefault;
@@ -2343,7 +2491,7 @@ class NeonDualGaugeCardEditor extends HTMLElement {
   }
 
   _entity(key, label, prefix = '') {
-    const row = this._row(label);
+    const row = this._row(_t(label));
     const inp = document.createElement('input'); inp.type = 'text'; inp.autocomplete = 'off';
     inp.placeholder = (prefix || 'domain') + '.…'; inp.dataset.key = key; inp.dataset.prefix = prefix;
     inp.setAttribute('list', `ndg-ent-${(prefix || 'all').replace(/[^a-z]/g, '')}`);
@@ -2353,13 +2501,13 @@ class NeonDualGaugeCardEditor extends HTMLElement {
   }
 
   _select(key, label, options, emptyLabel = null) {
-    const w = this._row(label).wrap;
+    const w = this._row(_t(label)).wrap;
     const sel = document.createElement('select'); sel.dataset.key = key;
-    if (emptyLabel !== null) { const o = document.createElement('option'); o.value = ''; o.textContent = emptyLabel; sel.appendChild(o); }
+    if (emptyLabel !== null) { const o = document.createElement('option'); o.value = ''; o.textContent = _t(emptyLabel); sel.appendChild(o); }
     options.forEach(opt => {
       const o = document.createElement('option');
       o.value = (typeof opt === 'object') ? opt.value : opt;
-      o.textContent = (typeof opt === 'object') ? opt.label : opt;
+      o.textContent = _t((typeof opt === 'object') ? opt.label : opt);
       sel.appendChild(o);
     });
     sel.value = this._read(key) ?? '';
@@ -2369,7 +2517,7 @@ class NeonDualGaugeCardEditor extends HTMLElement {
 
   // Extension au canon : slider avec valeur affichée en live.
   _range(key, label, { min = 0, max = 1, step = 0.01 } = {}) {
-    const row = this._row(label);
+    const row = this._row(_t(label));
     const box = document.createElement('div'); box.className = 'range-row';
     const inp = document.createElement('input'); inp.type = 'range'; inp.min = min; inp.max = max; inp.step = step;
     inp.dataset.key = key;
@@ -2382,8 +2530,8 @@ class NeonDualGaugeCardEditor extends HTMLElement {
 
   // Extension au canon : textarea YAML (listes d'objets) — severity/markers/zones.
   _textarea(key, label, ph = '') {
-    const row = this._row(label);
-    const ta = document.createElement('textarea'); ta.placeholder = ph; ta.dataset.key = key;
+    const row = this._row(_t(label));
+    const ta = document.createElement('textarea'); ta.placeholder = _t(ph); ta.dataset.key = key;
     const v = this._read(key); ta.value = v ? this._yamlStringify(v) : '';
     ta.addEventListener('blur', () => this._set(key, this._yamlParse(ta.value)));
     row.wrap.appendChild(ta); return ta;

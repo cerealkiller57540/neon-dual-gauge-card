@@ -142,7 +142,7 @@ About thirty more `plasma_*` and `halo_*` settings (roughness, frequency, reach,
 
 **Some cards go blank on my Android phone.** Android WebViews keep at most 8 WebGL contexts per page and drop the oldest one. This card uses one context and gives it back when it leaves the page. If you run many WebGL cards on one view, use `neon-dual-gauge-card` on some of them.
 
-**The editor labels are in French.** Translation is on the way. Every option can also be set in YAML.
+**Which languages are supported?** English and French. The editor and the card texts follow your Home Assistant language: French if it is French, English otherwise. Reload the page after changing the language. Every option can also be set in YAML.
 
 **Which theme is in the screenshots?** Neo Tokyo, the author's own dark theme (not published). The card works with any theme.
 
