@@ -11,7 +11,7 @@
 
 [![Open your Home Assistant instance and open this repository in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=cerealkiller57540&repository=neon-dual-gauge-card&category=plugin)
 
-<img src="https://raw.githubusercontent.com/cerealkiller57540/neon-dual-gauge-card/main/images/main.gif" alt="Neon Dual Gauge Card: battery power on the inner ring, state of charge on the outer ring, plasma arcs in between" width="440">
+<img src="https://raw.githubusercontent.com/cerealkiller57540/neon-dual-gauge-card/main/images/main.webp" alt="Neon Dual Gauge Card: battery power on the inner ring, state of charge on the outer ring, plasma arcs in between" width="440">
 
 </div>
 
