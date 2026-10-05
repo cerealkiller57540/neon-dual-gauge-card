@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⚡ Neon Dual Gauge Card
+<img src="https://raw.githubusercontent.com/cerealkiller57540/neon-dual-gauge-card/main/images/logo.png" alt="Neon Dual Gauge Card" width="480">
 
 **Two concentric LED gauges for Home Assistant, with a WebGL plasma core that reacts to the value.**
 
