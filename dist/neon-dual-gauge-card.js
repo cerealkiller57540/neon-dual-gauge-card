@@ -226,7 +226,7 @@
 // CONFIGURATION
 // ============================================================================
 
-const CARD_VERSION = '2.0.1';
+const CARD_VERSION = '2.1.0';
 
 // Device detection — auto-enable debounce on low-power tablets
 const IS_IPAD = /iPad/.test(navigator.userAgent) ||
@@ -2012,6 +2012,13 @@ function parseDualConfig(config) {
 /* ── i18n FR/EN : la clé est la chaîne française (le français s'affiche tel quel) ── */
 let _lang = /^fr/i.test(document.documentElement.lang || '') ? 'fr' : 'en';   // HA pose <html lang> ; hass.language fait foi ensuite
 const _EN = {
+ "LEDs": "LEDs",
+ "Zones & marqueurs": "Zones & markers",
+ "Typographie": "Typography",
+ "Couleurs & ombres": "Colours & shadows",
+ "Lueurs": "Glows",
+ "Anneau": "Ring",
+ "Pulse": "Pulse",
  "Animation pulse": "Pulse animation",
  "Anneau de verre central": "Central glass ring",
  "Attraction comète": "Comet attraction",
@@ -2434,6 +2441,20 @@ class NeonDualGaugeCardEditor extends HTMLElement {
 
   // ── Helpers de champ (signatures FIXES — ne pas réinventer) ────────
   _section(t) { const d = document.createElement('div'); d.className = 'sec'; d.textContent = _t(t); (this._appendTo || this).appendChild(d); return d; }
+  // Groupe repliable : buildFn() appelle les helpers, qui s'appendent DEDANS via _appendTo.
+  // L'état ouvert/fermé reste local au panneau (jamais dans _config).
+  _group(title, expanded, buildFn) {
+    const panel = document.createElement('ha-expansion-panel');
+    panel.outlined = true;
+    panel.header = _t(title);
+    if (expanded) panel.expanded = true;
+    (this._appendTo || this).appendChild(panel);
+    const prevAppendTo = this._appendTo;
+    this._appendTo = panel;
+    buildFn();
+    this._appendTo = prevAppendTo;
+    return panel;
+  }
   _hint(t)    { const d = document.createElement('div'); d.className = 'hint'; d.textContent = _t(t); (this._appendTo || this).appendChild(d); return d; }
 
   _text(key, label, ph = '') {
@@ -2628,14 +2649,25 @@ class NeonDualGaugeCardEditor extends HTMLElement {
   // ── CSS commun (identique partout, + spécifique range/textarea) ─────
   _css() {
     return `
+      neon-dual-gauge-card-editor {
+        --ned-label: color-mix(in srgb, var(--primary-text-color) 82%, transparent);
+        --ned-dim: color-mix(in srgb, var(--primary-text-color) 60%, transparent);
+        --ned-accent: color-mix(in srgb, var(--primary-color) 55%, var(--primary-text-color));
+        --ned-line: color-mix(in srgb, var(--primary-color) 55%, transparent);
+      }
+      neon-dual-gauge-card-editor ha-expansion-panel {
+        --outline-color: var(--ned-line);
+        --expansion-panel-summary-padding: 0 12px;
+        color: var(--primary-text-color);
+      }
       :host { display:block; padding:14px; font-family:var(--primary-font-family,Roboto,sans-serif); }
-      .sec { font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--primary-color);margin:16px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--divider-color); }
+      .sec { font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ned-accent);margin:16px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--divider-color); }
       .sec:first-child { margin-top:0; }
       .row { display:flex;align-items:center;gap:8px;margin-bottom:6px; }
-      .row label { flex:0 0 160px;font-size:12px;color:var(--secondary-text-color); }
+      .row label { flex:0 0 160px;font-size:12px;color:var(--ned-label); }
       .row label .mdi-link { color:var(--primary-color);font-size:9px;text-transform:none;letter-spacing:0; }
       .field-wrap { flex:1;min-width:0;display:flex; }
-      input[type=text],input[type=number],select,textarea { flex:1;width:100%;padding:4px 8px;border:1px solid var(--divider-color);border-radius:4px;background:var(--card-background-color);color:var(--primary-text-color);font-size:12px;outline:none;box-sizing:border-box; }
+      input[type=text],input[type=number],select,textarea { flex:1;width:100%;padding:4px 8px;border:1px solid var(--ned-line);border-radius:4px;background:var(--card-background-color);color:var(--primary-text-color);font-size:12px;outline:none;box-sizing:border-box; }
       textarea { font-family:monospace;min-height:70px;resize:vertical; }
       select { cursor:pointer; }
       input:focus,select:focus,textarea:focus { box-shadow:0 0 0 1px var(--primary-color); }
@@ -2643,10 +2675,10 @@ class NeonDualGaugeCardEditor extends HTMLElement {
       .color-row input[type=text] { flex:1; }
       .color-row input[type=color] { width:36px;height:28px;flex:none;padding:0;border:none;background:none;border-radius:4px;cursor:pointer; }
       .icon-preview { width:30px;height:28px;flex:none;display:flex;align-items:center;justify-content:center;border:1px solid var(--divider-color);border-radius:4px;color:var(--primary-text-color); }
-      .hint { font-size:11px;color:var(--secondary-text-color);font-style:italic;margin:-2px 0 6px 168px; }
+      .hint { font-size:11px;color:var(--ned-dim);font-style:italic;margin:-2px 0 6px 168px; }
       .range-row { display:flex;gap:8px;flex:1;align-items:center; }
       .range-row input[type=range] { flex:1; }
-      .range-row .range-val { flex:none;width:36px;text-align:right;font-size:11px;color:var(--secondary-text-color); }
+      .range-row .range-val { flex:none;width:36px;text-align:right;font-size:11px;color:var(--ned-label); }
       .gauge-block { border:1px dashed var(--divider-color);border-radius:8px;padding:8px 10px 2px;margin-bottom:12px; }
       .gauge-block-title { font-size:12px;font-weight:700;color:var(--primary-text-color);margin-bottom:8px; }
       .adv-block { margin:8px 0 4px;padding-top:8px;border-top:1px dashed var(--divider-color); }
@@ -2668,92 +2700,105 @@ class NeonDualGaugeCardEditor extends HTMLElement {
   _schema() {
     this._section('Carte');
     this._text('name', 'Titre de la carte', 'Nom de la carte');
-    this._text('title_font_family', 'Police du titre', 'inherit');
     this._select('title_position', 'Position du titre', NDG_POSITIONS.map(p => ({ value: p, label: p })));
+    this._select('primary_gauge', 'Jauge principale', [{ value: 'inner', label: 'Interne' }, { value: 'outer', label: 'Externe' }]);
     this._number('gauge_size', 'Taille jauge externe (px)', { min: 100, max: 400, step: 1, ph: '200' });
     this._number('inner_gauge_size', 'Taille jauge interne (px)', { ph: 'Auto (65%)' });
     this._number('inner_gauge_radius', 'Rayon jauge interne (px)', { ph: 'Auto' });
-    this._select('primary_gauge', 'Jauge principale', [{ value: 'inner', label: 'Interne' }, { value: 'outer', label: 'Externe' }]);
 
-    this._section('Effets visuels');
-    this._toggle('enable_custom_effects', 'Effets visuels', true);
-    this._toggle('enable_top_glow', 'Lueur supérieure', true);
-    this._toggle('enable_pulse_animation', 'Animation pulse', true);
-    this._toggle('neon_value_glow', 'Triple neon glow (valeurs)', true);
-    this._toggle('value_glow_dynamic', 'Glow de valeur dynamique (suit la sévérité)', true);
-    this._toggle('enable_comet_head', 'Tête de comète + traînée', true);
-    this._toggle('enable_ignition', "Sweep d'allumage (ignition)", true);
-    this._toggle('enable_tick_marks', 'Graduations gravées', true);
-    this._toggle('enable_glass_center', 'Anneau de verre central', true);
-    this._range('pulse_intensity', 'Intensité pulse (px)', { min: 5, max: 80, step: 1 });
-    this._range('pulse_speed', 'Vitesse pulse (s)', { min: 1, max: 12, step: 0.5 });
-    this._range('pulse_min_opacity', 'Opacité min pulse', { min: 0, max: 0.9, step: 0.05 });
-    this._toggle('enable_glitch_hover', 'Effet glitch survol', true);
-    this._toggle('hide_card', 'Masquer cadre', false);
-
-    this._section('Thème');
-    this._select('card_theme', 'Thème carte', NDG_THEMES, 'Défaut');
-    this._color('custom_background', 'Fond personnalisé', null, '#1a1a1a');
-    this._color('custom_gauge_background', 'Fond jauge', null, 'radial-gradient(...)');
-    this._color('custom_center_background', 'Fond centre', null, 'radial-gradient(...)');
-    this._color('custom_text_color', 'Couleur texte', null, '#ffffff');
-    this._color('custom_secondary_text_color', 'Couleur texte secondaire', null, '#cccccc');
-    this._toggle('hide_shadows', 'Masquer ombres', false);
-
-    this._section('Performance');
-    this._number('update_interval', 'Intervalle MàJ (ms)', { min: 100, max: 10000, step: 100, ph: '1000' });
-    this._toggle('power_save_mode', 'Économie énergie', false);
-    this._toggle('debounce_updates', 'Debounce MàJ', false);
-    this._toggle('kiosk_mode', 'Mode kiosque (économie thermique)', false);
-
+    // Jauge sans entité = card neuve : panneau ouvert pour qu'on la renseigne d'abord.
     [0, 1].forEach(idx => {
-      this._section(idx === 0 ? 'Jauge Interne (0)' : 'Jauge Externe (1)');
-      const box = document.createElement('div'); box.className = 'gauge-block'; this.appendChild(box);
-      this._appendTo = box;
-      this._entity(`gauges.${idx}.entity`, 'Entité', 'sensor');
-      this._number(`gauges.${idx}.min`, 'Min', { ph: '0' });
-      this._number(`gauges.${idx}.max`, 'Max', { ph: '100' });
-      this._text(`gauges.${idx}.unit`, 'Unité', '°C, %, W');
-      this._number(`gauges.${idx}.decimals`, 'Décimales', { min: 0, max: 3, step: 1, ph: '1' });
-      this._number(`gauges.${idx}.leds_count`, 'Nombre LEDs', { min: 20, max: 200, step: 1, ph: '100' });
-      this._number(`gauges.${idx}.led_size`, 'Taille LED (px)', { min: 3, max: 15, step: 1, ph: idx === 0 ? '6' : '8' });
-      this._number(`gauges.${idx}.animation_duration`, 'Durée animation (ms)', { min: 100, max: 3000, step: 10, ph: '800' });
-      this._toggle(`gauges.${idx}.smooth_transitions`, 'Transitions douces', true);
-      this._toggle(`gauges.${idx}.bidirectional`, 'Bidirectionnel', false);
-      this._toggle(`gauges.${idx}.hide_inactive_leds`, 'Masquer LEDs inactives', false);
+      const p = `gauges.${idx}.`;
+      this._group(idx === 0 ? 'Jauge Interne (0)' : 'Jauge Externe (1)', !this._read(p + 'entity'), () => {
+        this._entity(p + 'entity', 'Entité', 'sensor');
+        this._number(p + 'min', 'Min', { ph: '0' });
+        this._number(p + 'max', 'Max', { ph: '100' });
+        this._text(p + 'unit', 'Unité', '°C, %, W');
+        this._number(p + 'decimals', 'Décimales', { min: 0, max: 3, step: 1, ph: '1' });
+        this._toggle(p + 'bidirectional', 'Bidirectionnel', false);
+        this._group('LEDs', false, () => {
+          this._number(p + 'leds_count', 'Nombre LEDs', { min: 20, max: 200, step: 1, ph: '100' });
+          this._number(p + 'led_size', 'Taille LED (px)', { min: 3, max: 15, step: 1, ph: idx === 0 ? '6' : '8' });
+          this._number(p + 'animation_duration', 'Durée animation (ms)', { min: 100, max: 3000, step: 10, ph: '800' });
+          this._toggle(p + 'smooth_transitions', 'Transitions douces', true);
+          this._toggle(p + 'hide_inactive_leds', 'Masquer LEDs inactives', false);
+        });
+        this._group('Zones & marqueurs', false, () => {
+          this._textarea(p + 'severity', 'Zones de sévérité (YAML)', "- color: '#4caf50'\n  value: 33\n- color: '#ff9800'\n  value: 66");
+          this._hint('Format YAML — liste de seuils color/value');
+          this._textarea(p + 'markers', 'Marqueurs (YAML)', "- value: 50\n  color: '#ffffff'\n  label: 'Mid'");
+          this._hint('Format YAML — liste de marqueurs');
+          this._number(p + 'markers_radius', 'Rayon markers', { ph: 'Auto' });
+          this._textarea(p + 'zones', 'Zones colorées (YAML)', "- from: 20\n  to: 80\n  color: '#00ff00'\n  opacity: '0.3'");
+          this._hint('Format YAML — zones colorées');
+        });
+        this._group('Typographie', false, () => {
+          this._text(p + 'value_font_size', 'Taille valeur', '24px');
+          this._text(p + 'value_font_weight', 'Poids valeur', 'bold');
+          this._color(p + 'value_font_color', 'Couleur valeur', 'var(--primary-text-color)');
+          this._text(p + 'value_font_family', 'Police valeur', 'inherit');
+          this._text(p + 'unit_font_size', 'Taille unité', '14px');
+          this._text(p + 'unit_font_weight', 'Poids unité', 'normal');
+          this._color(p + 'unit_font_color', 'Couleur unité', 'var(--secondary-text-color)');
+          this._text(p + 'unit_font_family', 'Police unité', 'inherit');
+        });
+        this._group('Couleurs & ombres', false, () => {
+          this._select(p + 'theme', 'Thème', NDG_THEMES, 'Défaut');
+          this._color(p + 'custom_background', 'Fond personnalisé', null, '#f0f0f0');
+          this._color(p + 'custom_gauge_background', 'Fond jauge', null, 'radial-gradient(...)');
+          this._color(p + 'custom_center_background', 'Fond centre', null, 'radial-gradient(...)');
+          this._color(p + 'custom_text_color', 'Couleur texte', null, '#333');
+          this._color(p + 'custom_secondary_text_color', 'Couleur texte secondaire', null, '#666');
+          this._toggle(p + 'enable_shadow', 'Ombre conteneur', false);
+          this._toggle(p + 'center_shadow', 'Ombre centre', false);
+          this._number(p + 'center_shadow_blur', 'Flou ombre centre', { min: 0, max: 100, step: 1, ph: '30' });
+          this._number(p + 'center_shadow_spread', 'Étalement ombre centre', { min: 0, max: 50, step: 1, ph: '15' });
+          this._toggle(p + 'outer_shadow', 'Ombre externe', false);
+          this._number(p + 'outer_shadow_blur', 'Flou ombre externe', { min: 0, max: 100, step: 1, ph: '30' });
+          this._number(p + 'outer_shadow_spread', 'Étalement ombre externe', { min: 0, max: 50, step: 1, ph: '15' });
+        });
+      });
+    });
 
-      const adv = document.createElement('div'); adv.className = 'adv-block'; box.appendChild(adv);
-      this._appendTo = adv;
-      this._hint('Avancé');
-      this._select(`gauges.${idx}.theme`, 'Thème', NDG_THEMES, 'Défaut');
-      this._color(`gauges.${idx}.custom_background`, 'Fond personnalisé', null, '#f0f0f0');
-      this._color(`gauges.${idx}.custom_gauge_background`, 'Fond jauge', null, 'radial-gradient(...)');
-      this._color(`gauges.${idx}.custom_center_background`, 'Fond centre', null, 'radial-gradient(...)');
-      this._color(`gauges.${idx}.custom_text_color`, 'Couleur texte', null, '#333');
-      this._color(`gauges.${idx}.custom_secondary_text_color`, 'Couleur texte secondaire', null, '#666');
-      this._text(`gauges.${idx}.value_font_size`, 'Taille valeur', '24px');
-      this._text(`gauges.${idx}.value_font_weight`, 'Poids valeur', 'bold');
-      this._color(`gauges.${idx}.value_font_color`, 'Couleur valeur', 'var(--primary-text-color)');
-      this._text(`gauges.${idx}.value_font_family`, 'Police valeur', 'inherit');
-      this._text(`gauges.${idx}.unit_font_size`, 'Taille unité', '14px');
-      this._text(`gauges.${idx}.unit_font_weight`, 'Poids unité', 'normal');
-      this._color(`gauges.${idx}.unit_font_color`, 'Couleur unité', 'var(--secondary-text-color)');
-      this._text(`gauges.${idx}.unit_font_family`, 'Police unité', 'inherit');
-      this._toggle(`gauges.${idx}.enable_shadow`, 'Ombre conteneur', false);
-      this._toggle(`gauges.${idx}.center_shadow`, 'Ombre centre', false);
-      this._number(`gauges.${idx}.center_shadow_blur`, 'Flou ombre centre', { min: 0, max: 100, step: 1, ph: '30' });
-      this._number(`gauges.${idx}.center_shadow_spread`, 'Étalement ombre centre', { min: 0, max: 50, step: 1, ph: '15' });
-      this._toggle(`gauges.${idx}.outer_shadow`, 'Ombre externe', false);
-      this._number(`gauges.${idx}.outer_shadow_blur`, 'Flou ombre externe', { min: 0, max: 100, step: 1, ph: '30' });
-      this._number(`gauges.${idx}.outer_shadow_spread`, 'Étalement ombre externe', { min: 0, max: 50, step: 1, ph: '15' });
-      this._number(`gauges.${idx}.markers_radius`, 'Rayon markers', { ph: 'Auto' });
-      this._textarea(`gauges.${idx}.severity`, 'Zones de sévérité (YAML)', "- color: '#4caf50'\n  value: 33\n- color: '#ff9800'\n  value: 66");
-      this._hint('Format YAML — liste de seuils color/value');
-      this._textarea(`gauges.${idx}.markers`, 'Marqueurs (YAML)', "- value: 50\n  color: '#ffffff'\n  label: 'Mid'");
-      this._hint('Format YAML — liste de marqueurs');
-      this._textarea(`gauges.${idx}.zones`, 'Zones colorées (YAML)', "- from: 20\n  to: 80\n  color: '#00ff00'\n  opacity: '0.3'");
-      this._hint('Format YAML — zones colorées');
-      this._appendTo = null;
+    this._group('Effets visuels', false, () => {
+      this._toggle('enable_custom_effects', 'Effets visuels', true);
+      this._toggle('enable_glitch_hover', 'Effet glitch survol', true);
+      this._group('Anneau', false, () => {
+        this._toggle('enable_comet_head', 'Tête de comète + traînée', true);
+        this._toggle('enable_ignition', "Sweep d'allumage (ignition)", true);
+        this._toggle('enable_tick_marks', 'Graduations gravées', true);
+        this._toggle('enable_glass_center', 'Anneau de verre central', true);
+      });
+      this._group('Lueurs', false, () => {
+        this._toggle('enable_top_glow', 'Lueur supérieure', true);
+        this._toggle('neon_value_glow', 'Triple neon glow (valeurs)', true);
+        this._toggle('value_glow_dynamic', 'Glow de valeur dynamique (suit la sévérité)', true);
+      });
+      this._group('Pulse', false, () => {
+        this._toggle('enable_pulse_animation', 'Animation pulse', true);
+        this._range('pulse_intensity', 'Intensité pulse (px)', { min: 5, max: 80, step: 1 });
+        this._range('pulse_speed', 'Vitesse pulse (s)', { min: 1, max: 12, step: 0.5 });
+        this._range('pulse_min_opacity', 'Opacité min pulse', { min: 0, max: 0.9, step: 0.05 });
+      });
+    });
+
+    this._group('Thème carte', false, () => {
+      this._select('card_theme', 'Thème carte', NDG_THEMES, 'Défaut');
+      this._text('title_font_family', 'Police du titre', 'inherit');
+      this._color('custom_background', 'Fond personnalisé', null, '#1a1a1a');
+      this._color('custom_gauge_background', 'Fond jauge', null, 'radial-gradient(...)');
+      this._color('custom_center_background', 'Fond centre', null, 'radial-gradient(...)');
+      this._color('custom_text_color', 'Couleur texte', null, '#ffffff');
+      this._color('custom_secondary_text_color', 'Couleur texte secondaire', null, '#cccccc');
+      this._toggle('hide_shadows', 'Masquer ombres', false);
+      this._toggle('hide_card', 'Masquer cadre', false);
+    });
+
+    this._group('Performance', false, () => {
+      this._number('update_interval', 'Intervalle MàJ (ms)', { min: 100, max: 10000, step: 100, ph: '1000' });
+      this._toggle('power_save_mode', 'Économie énergie', false);
+      this._toggle('debounce_updates', 'Debounce MàJ', false);
+      this._toggle('kiosk_mode', 'Mode kiosque (économie thermique)', false);
     });
   }
 }
