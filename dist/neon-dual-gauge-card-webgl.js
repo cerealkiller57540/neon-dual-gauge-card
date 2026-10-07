@@ -236,7 +236,7 @@
 // CONFIGURATION
 // ============================================================================
 
-const CARD_VERSION = '1.0.0';
+const CARD_VERSION = '1.0.1';
 
 // Device detection — auto-enable debounce on low-power tablets
 const IS_IPAD = /iPad/.test(navigator.userAgent) ||
@@ -2006,7 +2006,8 @@ function updateDualGauge(context) {
 // WEBGL — RÉGLAGES (plasma + halos)
 // ============================================================================
 
-// Plasma: defaults tuned by eye on a test bench. YAML key = 'plasma_' + k.
+// Plasma : constantes ajustées visuellement, revérifier le rendu avant d'y toucher.
+// Clé YAML = 'plasma_' + k.
 const NDG_PLASMA = [
   { k: 'fil_max', label: 'Filaments max',          min: 1,   max: 8,   step: 1,    def: 7 },
   { k: 'rough',   label: 'Rugosité des zigzags',   min: 0,   max: 1,   step: 0.01, def: 0.50 },
@@ -2021,8 +2022,8 @@ const NDG_PLASMA = [
   { k: 'haze',    label: 'Brume de fond',          min: 0,   max: 1,   step: 0.05, def: 1.00 },
 ];
 
-// Halos: four styles, 'resonance' by default. g = visibility group in the editor:
-// g always, w waves, r reservoir, s resonance, n nebula (several letters = several modes).
+// Halos : 4 variantes au choix, résonance par défaut. g = groupe de visibilité dans l'éditeur : g toujours, w ondes,
+// r réservoir, s résonance, n nébuleuse (plusieurs lettres = plusieurs modes).
 const NDG_HALO = [
   { k: 'halo_fade_r',     label: "Rayon d'extinction (175 = aucune)", min: 120, max: 175, step: 1,    def: 175, g: 'g' },
   { k: 'halo_wave_int',   label: 'Ondes · intensité',                 min: 0,   max: 2,   step: 0.05, def: 1.0, g: 'w' },
@@ -2048,7 +2049,7 @@ const NDG_HALO = [
   { k: 'halo_s_base',     label: 'Halo SoC v2 dessous',               min: 0,   max: 1,   step: 0.05, def: 0,   g: 'sn' },
 ];
 
-// Modes. halo_power and halo_unavailable defaults.
+// Modes. Défauts de halo_power et halo_unavailable.
 const NDG_MODES = {
   plasma_flow_charge: { def: 'core',      opts: ['core', 'ring'] },
   halo_power:         { def: 'ondes',     opts: ['v2', 'ondes'] },
@@ -2146,7 +2147,7 @@ const NDG_REDUCED = typeof matchMedia !== 'undefined' &&
   matchMedia('(prefers-reduced-motion: reduce)').matches;
 const NDG_TAU = Math.PI * 2;
 const NDG_VS = 'attribute vec2 aP;void main(){gl_Position=vec4(aP,0.0,1.0);}';
-// Shader du banc d'essai, recopié verbatim par gen_ndg_card_webgl.py (ndg_plasma.frag).
+// Shader recopié verbatim par gen_ndg_card_webgl.py (ndg_plasma.frag).
 // uConcept reste à 0 : seul le plasma A a été retenu, B et C dorment dans le shader.
 const NDG_FS = `#ifdef GL_FRAGMENT_PRECISION_HIGH
 precision highp float;
