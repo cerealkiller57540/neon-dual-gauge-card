@@ -2837,6 +2837,9 @@ console.info(
 // Load the WebGL variant shipped in the same folder, so a single
 // dashboard resource registers both cards.
 if (!customElements.get('neon-dual-gauge-card-webgl')) {
-  import(new URL('./neon-dual-gauge-card-webgl.js', import.meta.url).href)
+  // keep the ?hacstag of this resource: without it a HACS update keeps serving the cached variant
+  const u = new URL('./neon-dual-gauge-card-webgl.js', import.meta.url);
+  u.search = new URL(import.meta.url).search;
+  import(u.href)
     .catch(e => console.warn('[neon-dual-gauge-card] WebGL variant not loaded:', e));
 }
