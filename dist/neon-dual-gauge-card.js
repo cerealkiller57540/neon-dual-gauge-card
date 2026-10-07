@@ -226,7 +226,7 @@
 // CONFIGURATION
 // ============================================================================
 
-const CARD_VERSION = '2.1.0';
+const CARD_VERSION = '2.1.2';
 
 // Device detection — auto-enable debounce on low-power tablets
 const IS_IPAD = /iPad/.test(navigator.userAgent) ||
@@ -2829,7 +2829,7 @@ window.customCards.push({
 });
 
 console.info(
-  '%c ⚡ neon-dual-gauge-card v2.0.0 %c Neo Tokyo ',
+  '%c ⚡ neon-dual-gauge-card v2.1.2 %c Neo Tokyo ',
   'background:#9D4EDD;color:#000;padding:2px 4px;border-radius:3px 0 0 3px;font-weight:bold;',
   'background:#040811;color:#00D4FF;padding:2px 4px;border-radius:0 3px 3px 0;'
 );
