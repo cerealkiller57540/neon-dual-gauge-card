@@ -19,19 +19,13 @@ Two related values in one round gauge: an inner LED ring and an outer one, each 
 
 The WebGL variant fills the space between the core and the inner ring with plasma arcs. Their number, speed and pulses follow the inner value, they flow towards the core or the ring depending on its sign, and a halo around the outer ring breathes with the second value.
 
-<img src="https://raw.githubusercontent.com/cerealkiller57540/neon-dual-gauge-card/main/images/variants.png" alt="The CSS card (left) and the WebGL card (right) with the same data, without any theme" width="700">
-
-*Left: `neon-dual-gauge-card` (CSS). Right: `neon-dual-gauge-card-webgl`. Same data, no theme.*
-
 ## ✨ Features
 
-- **Two cards in one install**
-  - `neon-dual-gauge-card-webgl`: plasma, LEDs, shadows and halos drawn in a single WebGL canvas (recommended).
-  - `neon-dual-gauge-card`: the same gauges built from DOM elements and CSS.
+- `neon-dual-gauge-card-webgl`: plasma, LEDs, shadows and halos drawn in a single WebGL canvas.
 - **Bidirectional mode** for values that go both ways (battery charging / discharging, grid import / export): the ring fills from zero in either direction.
 - **Severity colours, markers and zones** per gauge.
 - **Comet head, ignition sweep, glass centre, tick marks**, each one an on/off option.
-- **Four halo styles** around the outer ring (WebGL): resonance, reservoir, nebula, or the plain glow of the CSS card.
+- **Four halo styles** around the outer ring (WebGL): resonance, reservoir, nebula, or a plain glow.
 - **Visual editor** with grouped sections; every plasma and halo setting is a slider.
 - Inherits your theme colours by default. Pauses when off-screen, releases its WebGL context when removed (Android WebViews cap a page at 8 contexts), and falls back to the CSS LED rendering if WebGL is not available.
 
@@ -43,11 +37,13 @@ The WebGL variant fills the space between the core and the inner ring with plasm
 2. Download **Neon Dual Gauge Card**.
 3. Reload your browser.
 
-HACS registers one resource, `neon-dual-gauge-card.js`. It loads the WebGL variant on its own, so **do not** add `neon-dual-gauge-card-webgl.js` as a second resource.
+HACS registers one resource, `neon-dual-gauge-card.js`. The card type is `custom:neon-dual-gauge-card-webgl`.
+
+If you used the former CSS card (`custom:neon-dual-gauge-card`), change its type to `custom:neon-dual-gauge-card-webgl`: the CSS version is no longer shipped.
 
 ### Manual
 
-1. Copy both files from [`dist/`](dist) to `config/www/neon-dual-gauge-card/`.
+1. Copy [`dist/neon-dual-gauge-card.js`](dist/neon-dual-gauge-card.js) to `config/www/neon-dual-gauge-card/`.
 2. Add a dashboard resource: URL `/local/neon-dual-gauge-card/neon-dual-gauge-card.js`, type **JavaScript module**.
 
 ## 🚀 Usage
@@ -122,8 +118,6 @@ gauges:
 | `value_font_size` / `_weight` / `_color` / `_family`, `unit_font_…` | theme | Value and unit style |
 | `center_shadow`, `outer_shadow` (+ `_blur`, `_spread`) | `false` | Shadows |
 
-**WebGL card only**
-
 | Option | Default | Description |
 |---|---|---|
 | `halo_soc` | `resonance` | Halo around the outer ring: `resonance`, `reservoir`, `nebuleuse` (nebula), `v2` (plain CSS glow) |
@@ -140,7 +134,7 @@ About thirty more `plasma_*` and `halo_*` settings (roughness, frequency, reach,
 
 **Which value goes where?** The first entry of `gauges:` is the inner ring and drives the plasma; the second is the outer ring and drives the halo.
 
-**Some cards go blank on my Android phone.** Android WebViews keep at most 8 WebGL contexts per page and drop the oldest one. This card uses one context and gives it back when it leaves the page. If you run many WebGL cards on one view, use `neon-dual-gauge-card` on some of them.
+**Some cards go blank on my Android phone.** Android WebViews keep at most 8 WebGL contexts per page and drop the oldest one. This card uses one context and gives it back when it leaves the page.
 
 **Which languages are supported?** English and French. The editor and the card texts follow your Home Assistant language: French if it is French, English otherwise. Reload the page after changing the language. Every option can also be set in YAML.
 
