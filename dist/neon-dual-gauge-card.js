@@ -1,5 +1,5 @@
 /**
- * NEON DUAL GAUGE CARD — WEBGL  v2.2.0
+ * NEON DUAL GAUGE CARD — WEBGL  v2.2.1
  * type: custom:neon-dual-gauge-card-webgl
  *
  * WebGL variant of neon-dual-gauge-card: a plasma field between the core and the
@@ -236,7 +236,7 @@
 // CONFIGURATION
 // ============================================================================
 
-const CARD_VERSION = '2.2.0';
+const CARD_VERSION = '2.2.1';
 
 // Device detection — auto-enable debounce on low-power tablets
 const IS_IPAD = /iPad/.test(navigator.userAgent) ||
@@ -3384,6 +3384,7 @@ class NeonDualGaugeCardWebgl extends HTMLElement {
     rig.resting = a < 0.02 && Math.abs(on - onT) < 0.02 && Math.abs(soc - socT) < 0.005;
   }
 
+  getGridOptions() { return { columns: 12, min_columns: 3 }; }
   getCardSize() {
     return 4;
   }
