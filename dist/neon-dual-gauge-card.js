@@ -1,5 +1,5 @@
 /**
- * NEON DUAL GAUGE CARD — WEBGL  v2.2.1
+ * NEON DUAL GAUGE CARD — WEBGL  v2.2.2
  * type: custom:neon-dual-gauge-card-webgl
  *
  * WebGL variant of neon-dual-gauge-card: a plasma field between the core and the
@@ -236,7 +236,7 @@
 // CONFIGURATION
 // ============================================================================
 
-const CARD_VERSION = '2.2.1';
+const CARD_VERSION = '2.2.2';
 
 // Device detection — auto-enable debounce on low-power tablets
 const IS_IPAD = /iPad/.test(navigator.userAgent) ||
@@ -3909,6 +3909,26 @@ console.info(
 );
 
 if (!customElements.get("neon-dual-gauge-card-webgl")) {
+  // Une valeur de config interpolée dans un <style> ne doit pas pouvoir le refermer.
+  function _ndgCfgSafe(v, path) {
+    if (typeof v === 'string') return v.replace(/<\/(style)/gi, '<\\/$1');
+    if (!v || typeof v !== 'object') return v;
+    const isArr = Array.isArray(v);
+    let out = v;
+    for (const k of Object.keys(v)) {
+      const p = isArr ? path : (path ? path + '.' + k : k);
+      const nv = _ndgCfgSafe(v[k], p);
+      if (nv !== v[k]) {
+        if (out === v) out = isArr ? v.slice() : { ...v };
+        out[k] = nv;
+      }
+    }
+    return out;
+  }
+  {
+    const _setCfg = NeonDualGaugeCardWebgl.prototype.setConfig;
+    NeonDualGaugeCardWebgl.prototype.setConfig = function (c) { return _setCfg.call(this, _ndgCfgSafe(c, '')); };
+  }
   customElements.define("neon-dual-gauge-card-webgl", NeonDualGaugeCardWebgl);
 }
 
