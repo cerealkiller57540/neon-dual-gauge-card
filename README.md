@@ -154,7 +154,7 @@ This card is part of a family. See the full collection at [**Home-Assistant-Neon
 
 If you enjoy these cards, please consider donating to **Quatre Pattes**, an animal rescue organization.
 
-[![Sauver des animaux](https://img.shields.io/badge/🐾%20Sauver%20des%20animaux-Faire%20un%20don-ff69b4?style=for-the-badge)](https://don.quatre-pattes.org/s/?_jtsuid=70083177244599792679303)
+[![Sauver des animaux](https://img.shields.io/badge/🐾%20Sauver%20des%20animaux-Faire%20un%20don-ff69b4?style=for-the-badge)](https://www.four-paws.org/)
 
 > 💛 No need to support me — just help the animals. Thank you!
 
