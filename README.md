@@ -138,6 +138,8 @@ About thirty more `plasma_*` and `halo_*` settings (roughness, frequency, reach,
 
 **Which languages are supported?** English and French. The editor and the card texts follow your Home Assistant language: French if it is French, English otherwise. Reload the page after changing the language. Every option can also be set in YAML.
 
+**Does the card contact Google Fonts?** Not by default. Fonts inherit from your theme, and no request leaves your Home Assistant. Only if you set a custom font name in `title_font_family`, `value_font_family` or `unit_font_family` (a name that is not a system font) does the card load that family from `fonts.googleapis.com`. Use a system font or `inherit` to keep everything local.
+
 **Which theme is in the screenshots?** Neo Tokyo, the author's own dark theme (not published). The card works with any theme.
 
 ## 🙏 Credits
