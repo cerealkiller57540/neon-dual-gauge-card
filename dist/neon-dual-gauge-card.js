@@ -1256,7 +1256,8 @@ function renderDual(context) {
   `;
 
   // Déterminer la position du titre
-  const titlePosition = context.config.title_position || 'bottom';
+  const TITLE_POSITIONS = ['bottom', 'top', 'inside-top', 'inside-bottom', 'none'];
+  const titlePosition = TITLE_POSITIONS.includes(context.config.title_position) ? context.config.title_position : 'bottom';
   const titleClass = titlePosition !== 'bottom' ? `title position-${titlePosition}` : 'title';
   const isInsidePosition = titlePosition === 'inside-top' || titlePosition === 'inside-bottom';
 
@@ -1303,7 +1304,7 @@ function renderDual(context) {
     </style>
     <ha-card>
     <div class="${cardClasses}" id="gauge-container">
-      <div class="gauge dual-gauge" style="background: ${globalTheme.gaugeBackground}">
+      <div class="gauge dual-gauge" style="background: ${escapeHtml(globalTheme.gaugeBackground)}">
         ${isInsidePosition ? titleHTML : ''}
         <div class="outer-shadow" id="outer-shadow-inner"></div>
         <div class="outer-shadow" id="outer-shadow-outer"></div>
@@ -1312,7 +1313,7 @@ function renderDual(context) {
         ${context.config.enable_tick_marks !== false ? generateTicksHTML(innerGaugeRadius - ledSize1 - 12) : ''}
         ${generateLedsHTML(ledsCount2, outerGaugeSize / 2, ledSize2, 'outer')}
         ${generateLedsHTML(ledsCount1, innerGaugeRadius, ledSize1, 'inner')}
-        <div class="center dual-center" style="background: ${globalTheme.centerBackground}">
+        <div class="center dual-center" style="background: ${escapeHtml(globalTheme.centerBackground)}">
           ${context.config.enable_glass_center !== false ? '<div class="ndg-glass"></div>' : ''}
           <div class="value-group ${isPrimaryInner ? '' : 'secondary'}" id="group-inner" role="button" tabindex="0" aria-label="${escapeHtml(config1.entity || '')}">
             <div class="value" id="value-inner">0</div>
